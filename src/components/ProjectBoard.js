@@ -10,59 +10,98 @@ class ProjectBoard extends Component {
     this.props.getBacklog();
   }
   render() {
-    return (
-      <div className="container">
-        <Link to="/addProjectTask" className="btn btn-primary mb-3">
-          <i className="fas fa-plus-circle"> Create Project Task</i>
-        </Link>
-        <br />
-        <hr />
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-secondary text-white">
-                  <h3>TO DO</h3>
-                </div>
-              </div>
+    const { project_tasks } = this.props.project_tasks;
 
-              {
-                //<!-- SAMPLE PROJECT TASK STARTS HERE -->
-              }
-              <ProjectTaskItem />
-              {
-                // <!-- SAMPLE PROJECT TASK ENDS HERE -->
-              }
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-primary text-white">
-                  <h3>In Progress</h3>
-                </div>
-              </div>
-              {
-                //  <!-- SAMPLE PROJECT TASK STARTS HERE -->
-                //                     <!-- SAMPLE PROJECT TASK ENDS HERE -->
-              }
-              <ProjectTaskItem />
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-success text-white">
-                  <h3>Done</h3>
-                </div>
-              </div>
-              {
-                //<!-- SAMPLE PROJECT TASK STARTS HERE -->
-                //<!-- SAMPLE PROJECT TASK ENDS HERE -->
-              }
+    let BoardContent;
+    let todoItems = [];
+    let inProgressItems = [];
+    let doneItems = [];
 
-              <ProjectTaskItem />
-            </div>
+    const BoardAlgorithm = project_tasks => {
+      if (project_tasks.length < 1) {
+        return (
+          <div className="alert alert-info text-center" role="alert">
+            No Project Tasks on this board
           </div>
-        </div>
-      </div>
-    );
+        );
+      } else {
+        const tasks = project_tasks.map(project_task => (
+          <ProjectTaskItem key={project_task.id} project_task={project_task} />
+        ));
+
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].props.project_task.status === "TO_DO") {
+            todoItems.push(tasks[i]);
+          }
+
+          if (tasks[i].props.project_task.status === "IN_PROGRESS") {
+            inProgressItems.push(tasks[i]);
+          }
+
+          if (tasks[i].props.project_task.status === "DONE") {
+            doneItems.push(tasks[i]);
+          }
+        }
+
+        return (
+          <React.Fragment>
+            <Link to="/addProjectTask" className="btn btn-primary mb-3">
+              <i className="fas fa-plus-circle"> Create Project Task</i>
+            </Link>
+            <br />
+            <hr />
+            <div className="container">
+              <div className="row">
+                <div className="col-md-4">
+                  <div className="card text-center mb-2">
+                    <div className="card-header bg-secondary text-white">
+                      <h3>TO DO</h3>
+                    </div>
+                  </div>
+
+                  {
+                    //<!-- SAMPLE PROJECT TASK STARTS HERE -->
+                  }
+                  {todoItems}
+                  {
+                    // <!-- SAMPLE PROJECT TASK ENDS HERE -->
+                  }
+                </div>
+                <div className="col-md-4">
+                  <div className="card text-center mb-2">
+                    <div className="card-header bg-primary text-white">
+                      <h3>In Progress</h3>
+                    </div>
+                  </div>
+                  {
+                    //  <!-- SAMPLE PROJECT TASK STARTS HERE -->
+                    //                     <!-- SAMPLE PROJECT TASK ENDS HERE -->
+                  }
+                  {inProgressItems}
+                </div>
+                <div className="col-md-4">
+                  <div className="card text-center mb-2">
+                    <div className="card-header bg-success text-white">
+                      <h3>Done</h3>
+                    </div>
+                  </div>
+                  {
+                    //<!-- SAMPLE PROJECT TASK STARTS HERE -->
+                    //<!-- SAMPLE PROJECT TASK ENDS HERE -->
+                  }
+
+                  {doneItems}
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      }
+    };
+
+    BoardContent = BoardAlgorithm(project_tasks);
+
+    return <div className="container">{BoardContent}</div>;
   }
 }
 
@@ -72,7 +111,7 @@ ProjectBoard.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  project_tasks: state.project_tasks
+  project_tasks: state.project_task
 });
 
 export default connect(
