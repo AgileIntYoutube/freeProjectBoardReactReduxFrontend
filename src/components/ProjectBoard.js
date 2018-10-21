@@ -45,11 +45,6 @@ class ProjectBoard extends Component {
 
         return (
           <React.Fragment>
-            <Link to="/addProjectTask" className="btn btn-primary mb-3">
-              <i className="fas fa-plus-circle"> Create Project Task</i>
-            </Link>
-            <br />
-            <hr />
             <div className="container">
               <div className="row">
                 <div className="col-md-4">
@@ -101,7 +96,16 @@ class ProjectBoard extends Component {
 
     BoardContent = BoardAlgorithm(project_tasks);
 
-    return <div className="container">{BoardContent}</div>;
+    return (
+      <div className="container">
+        <Link to="/addProjectTask" className="btn btn-primary mb-3">
+          <i className="fas fa-plus-circle"> Create Project Task</i>
+        </Link>
+        <br />
+        <hr />
+        {BoardContent}
+      </div>
+    );
   }
 }
 
