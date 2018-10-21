@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { addProjectTask } from "../../actions/projectTaskActions";
+import classnames from "classnames";
 
 class AddProjectTask extends Component {
   constructor() {
@@ -21,7 +25,7 @@ class AddProjectTask extends Component {
       status: this.state.status
     };
 
-    console.log(newProjectTask);
+    this.props.addProjectTask(newProjectTask, this.props.history);
   }
 
   onChange(e) {
@@ -84,4 +88,15 @@ class AddProjectTask extends Component {
   }
 }
 
-export default AddProjectTask;
+AddProjectTask.propTypes = {
+  addProjectTask: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+export default connect(
+  mapStateToProps,
+  { addProjectTask }
+)(AddProjectTask);
