@@ -6,13 +6,44 @@ import PropTypes from "prop-types";
 import { getProjectTask } from "../../actions/projectTaskActions";
 
 class UpdateProjectTask extends Component {
+  constructor() {
+    super();
+    this.state = {
+      id: "",
+      summary: "",
+      acceptanceCriteria: "",
+      status: "",
+      errors: {}
+    };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+
+    const { id, summary, acceptanceCriteria, status } = nextProps.project_task;
+
+    this.setState({
+      id,
+      summary,
+      acceptanceCriteria,
+      status
+    });
+  }
+
   componentDidMount() {
     const { pt_id } = this.props.match.params;
     this.props.getProjectTask(pt_id);
   }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
   render() {
     return (
-      <div className="addProjectTask">
+      <div className="updateProjectTask">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
@@ -27,6 +58,8 @@ class UpdateProjectTask extends Component {
                     className="form-control form-control-lg"
                     name="summary"
                     placeholder="Project Task summary"
+                    value={this.state.summary}
+                    onChange={this.onChange}
                   />
                 </div>
                 <div className="form-group">
@@ -34,12 +67,16 @@ class UpdateProjectTask extends Component {
                     className="form-control form-control-lg"
                     placeholder="Acceptance Criteria"
                     name="acceptanceCriteria"
+                    value={this.state.acceptanceCriteria}
+                    onChange={this.onChange}
                   />
                 </div>
                 <div className="form-group">
                   <select
                     className="form-control form-control-lg"
                     name="status"
+                    value={this.state.status}
+                    onChange={this.onChange}
                   >
                     <option value="">Select Status</option>
                     <option value="TO_DO">TO DO</option>
@@ -67,7 +104,7 @@ UpdateProjectTask.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  project_task: state.project_task,
+  project_task: state.project_task.project_task,
   errors: state.errors
 });
 
